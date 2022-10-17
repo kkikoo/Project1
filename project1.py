@@ -2,12 +2,15 @@ from pathlib import Path
 
 code_of_message_type = {1:"CANCELLATION", -1:"CANCELLATION", 2:"ALERT", -2:"ALERT"}
 
-def add_message(time,device_id, message_type, message_name, from_device,):
-    return (time,device_id, message_type, message_name, from_device,)
+def add_message(time,device_id, message_type, message_name, from_device):
+    return (time,device_id, message_type, message_name, from_device)
 
 def my_sort(ls):
     y = sorted(ls, key = lambda ele: (ele[0], ele[1], ele[2], ele[3], ele[4]))
     return y
+
+def print_sent(time,device_id, message_type, message_name, from_device):
+    print ("@{} #{}: SENT {} TO #{}: {}".format(time,device_id, message_type, message_name, from_device))
 
 
 
