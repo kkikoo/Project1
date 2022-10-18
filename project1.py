@@ -28,19 +28,29 @@ def process_file(filepath):
     all_message_name = set()
     message_list = []
 
-    try:
-        #print filepath
-        with open(filepath, 'r') as f:
-            for line in f.readllines():
-                line - line.strip()
-                if len(line) == 0 or line[0] == '#':
-                    continue
-                word = line.split(' ')
-                #print word
-                if word[0] == 'DEVICE':
-                    device.append(int(word[1]))
-                elif word[0] == "PROPAGATE":
 
+    #print filepath
+    with open(filepath, 'r') as f:
+        for line in f.readllines():
+            line - line.strip()
+            if len(line) == 0 or line[0] == '#':
+                continue
+            word = line.split(' ')
+            #print word
+            if word[0] == 'DEVICE':
+                device.append(int(word[1]))
+            elif word[0] == "PROPAGATE":
+                next_device[int(word[1])] = int(word[2])
+                cost_of_time[(int(word[1]), int(word[2]))] = int(word[3])
+            elif word[0] == 'ALERT':
+                all_message_name.add(word[2])
+                message_list.append(add_message(int(word[3]), int(word[1]), 2, word[2], -1))
+            else:
+                all_message_name.add(word[2])
+                message_list.append(add_message(int(word[3]), int(word[1]), 1, word[2], -1))
+        return device, next_device, cost_of_time, all_message_name, message_list
+
+        print("FILE NOT FOUND")
 
 def main() -> None:
     """Runs the simulation program in its entirety"""
