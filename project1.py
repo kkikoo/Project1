@@ -54,7 +54,7 @@ def process_file(filepath):
         print("FILE NOT FOUND")
         pass
 
-def main() -> None:
+def main():
     """Runs the simulation program in its entirety"""
     input_file_path = _read_input_file_path()
     device, next_device, cost_of_time, all_message_name, message_list = process_file(input_file_path)
@@ -109,6 +109,33 @@ def main() -> None:
                                 v[_k] = 2
                     known[message_name][device_id] = 1
                     message_list.append(_message)
+            else: #RECEIVED ALERT
+                if known[message_name][device_id] in [1, 2]:
+                    continue
+                else:
+                    _message = add_message(
+                        time = time,
+                        device_id = device_id,
+                        message_type = -1 * message_type,
+                        message_name = message_name,
+                        from_device = from_device[device_id]
+                    )
+                    message_list.append(_message)
+        else: #STOP SENDING, "CANCELLATION", BEFORE KNOWN, STOP SENDING
+            if message_type == 1 and known[message_name][device_id] == 2:
+                continue
+            #SENDING "ALERT"
+            if message_type == 2 and known[message_name][device_id] in [1, 2]:
+                continue
+            else:
+                _message = add_message(
+                    time = time + need_time,
+                    device_id = to_device_id,
+                    message_type = -1 * message_type,
+                    message_name = message_name,
+                    from_device = device_id
+                )
+                message_list.append(_message)
 
 if __name__ == '__main__':
     main()
