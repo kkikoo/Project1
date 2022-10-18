@@ -106,7 +106,7 @@ def main():
                         device_id = device_id,
                         message_type = -1 * message_type,
                         message_name = message_name,
-                        from_device = from_device[device_id]
+                        from_device = _from_device[device_id]
                     )
                     for _k in known[message_name].keys():
                         if known[message_name][_k] == 1:
@@ -124,7 +124,7 @@ def main():
                         device_id = device_id,
                         message_type = -1 * message_type,
                         message_name = message_name,
-                        from_device = from_device[device_id]
+                        from_device = _from_device[device_id]
                     )
                     message_list.append(_message)
         else: #STOP SENDING, "CANCELLATION", BEFORE KNOWN, STOP SENDING
