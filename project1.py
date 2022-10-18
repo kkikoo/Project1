@@ -57,8 +57,9 @@ def process_file(filepath):
 def main():
     """Runs the simulation program in its entirety"""
     input_file_path = _read_input_file_path()
+
     device, next_device, cost_of_time, all_message_name, message_list = process_file(input_file_path)
-    from_device = {int(j): int(i) for i, j in next_device.items()}
+    _from_device = {int(j): int(i) for i, j in next_device.items()}
     known = {i: {j: 0 for j in device} for i in all_message_name}
 
     while len(message_list) > 0:
@@ -68,19 +69,23 @@ def main():
         message_list = message_list[1:]
         # get specific words
         time, device_id, message_type, message_name, from_device = first[0], first[1], first[2], first[3], first[4]
-        to_device_id: next_device[device_id]
-        from_device_id: from_device[device_id]
+        to_device_id = next_device[device_id]
+        from_device_id = _from_device[device_id]
         need_time = cost_of_time[(device_id, to_device_id)]
 
         #start printing
         if message_type > 0:
             print_sent(time, device_id, message_type, to_device_id, message_name)
         else:
-            print_received(time, device_id, message_type, from_device, message_name)
+            print_received(time, device_id, message_type, from_device_id, message_name)
 
         if from_device == -1: #from the device
             if message_type == 1: #stop sending
-                known[message_name][device_id] = 1
+                for _k in known[message_name].keys():
+                    if known[message_name][_k] == 1:
+                        known[message_name][_k] = 2
+                if known[message_name][device_id] == 0:
+                    known[message_name][device_id] = 1
 
             _message = add_message(
                 time = time + need_time,
@@ -103,11 +108,12 @@ def main():
                         message_name = message_name,
                         from_device = from_device[device_id]
                     )
-                    for k, v in known.items():
-                        for _k in v.keys():
-                            if v[_k] == 1:
-                                v[_k] = 2
-                    known[message_name][device_id] = 1
+                    for _k in known[message_name].keys():
+                        if known[message_name][_k] == 1:
+                            known[message_name][_k] = 2
+                    if known[message_name][device_id] == 0:
+                        known[message_name][device_id] = 1
+
                     message_list.append(_message)
             else: #RECEIVED ALERT
                 if known[message_name][device_id] in [1, 2]:
