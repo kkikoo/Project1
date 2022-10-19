@@ -75,6 +75,16 @@ class test_project1(unittest.TestCase):
                          [(0, 985, 1, 'Trouble', -1), (0, 985, 1, 'Trouble', 1), ]
                          )
 
+    def test_2_alerts_are_scheduled_to_be_initiated_at_the_same_time(self):
+        # If two alerts are scheduled to be initiated at the same time,
+        # the one being initiated by the device with the [smaller device ID] is initiated first.
+        # If they're being initiated by the same device, the alert with the [lexicographically "lesser"] description (e.g., 'Boo' before 'Hello') is initiated first.
+        message_list = [(0, 985, 2, 'Hello', -1), (0, 985, 2, 'Boo', -1),
+                        (0, 211, 2, 'Hello', -1), (0, 211, 2, 'Boo', -1), ]
+        self.assertEqual(my_sort(message_list),
+                         [(0, 211, 2, 'Boo', -1), (0, 211, 2, 'Hello', -1),
+                          (0, 985, 2, 'Boo', -1), (0, 985, 2, 'Hello', -1), ]
+                         )
 
 if __name__ == '__main__':
     unittest.main()
