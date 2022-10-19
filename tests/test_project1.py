@@ -27,7 +27,15 @@ class test_project1(unittest.TestCase):
         time, device_id, message_type, message_name, from_device = 100, 1, 1, "TEST_MESSAGE", 5
         self.assertEqual(add_message(time, device_id, message_type, message_name, from_device, ), (100, 1, 1, "TEST_MESSAGE", 5,))
 
-
+    def test_print(self):
+        with contextlib.redirect_stdout(io.StringIO()) as output:
+            print_sent(time = 100, device_id = 1, message_type = 1,
+                       to_id = 2, message_name = "TestTrouble-1")
+            print_received(time = 200, device_id = 2, message_type = 1,
+                           from_id = 1, message_name = "TestTrouble-2")
+            self.assertEqual(output.getvalue(
+            ),
+                "@100 #1: SENT CANCELLATION TO #2: TestTrouble-1\n@200 #2: RECEIVED CANCELLATION FROM #1: TestTrouble-2\n")
 
 
 
