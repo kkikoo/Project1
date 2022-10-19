@@ -1,19 +1,25 @@
 from project1 import *
-
+import io
 import unittest
+import contextlib
 
-class demoTestOpen(unittest.TestCase):
-    def __init__(self, filepath):
-        super().__init__()
-        self.filepath = filepath
-    def __enter__(self):
-        self.f = open(self.filepath, 'r+')
-        return self.f
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.f.close()
-        if exc_type != FileNotFoundError:
-            return True
-        return False
+class test_project1(unittest.TestCase):
+
+    def test_file_not_exist(self):
+        filepath = Path("no_sample_input.txt")
+        with contextlib.redirect_stdout(io.StringIO()) as output:
+            process_file(filepath),
+            self.assertEqual(output.getattribute(), "FILE NOT FOUND\n")
+
+    def test_file_output(self):
+
+
+
+
+
+
+
+
 
 
 
