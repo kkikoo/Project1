@@ -23,6 +23,11 @@ class test_project1(unittest.TestCase):
         self.assertEqual(
             message_list, [(0, 1, 2, 'Trouble', -1), (2200, 1, 1, 'Trouble', -1)])
 
+    def test_add_message(self):
+        time, device_id, message_type, message_name, from_device = 100, 1, 1, "TEST_MESSAGE", 5
+        self.assertEqual(add_message(time, device_id, message_type, message_name, from_device, ), (100, 1, 1, "TEST_MESSAGE", 5,))
+
+
 
 
 
