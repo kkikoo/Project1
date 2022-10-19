@@ -6,19 +6,19 @@ import contextlib
 class test_project1(unittest.TestCase):
 
     def test_file_not_exist(self):
-        filepath = Path("no_sample_input.txt")
+        filepath = Path("sample_input.txt")
         with contextlib.redirect_stdout(io.StringIO()) as output:
             process_file(filepath),
-            self.assertEqual(output.getattribute(), "FILE NOT FOUND\n")
+            self.assertEqual(output.getvalue(), "FILE NOT FOUND\n")
 
     def test_file_output(self):
         filepath = Path("sample_input.txt")
-        device, _next_device, cost_time, all_message_name, message_list = process_file(
+        device, next_device, cost_of_time, all_message_name, message_list = process_file(
             filepath)
         self.assertEqual(device, [1, 2, 3, 4])
-        self.assertEqual(_next_device, {1: 2, 2: 3, 3: 4, 4: 1})
+        self.assertEqual(next_device, {1: 2, 2: 3, 3: 4, 4: 1})
         self.assertEqual(
-            cost_time, {(1, 2): 750, (2, 3): 1250, (3, 4): 500, (4, 1): 1000})
+            cost_of_time, {(1, 2): 750, (2, 3): 1250, (3, 4): 500, (4, 1): 1000})
         self.assertEqual(all_message_name, {'Trouble'})
         self.assertEqual(
             message_list, [(0, 1, 2, 'Trouble', -1), (2200, 1, 1, 'Trouble', -1)])
@@ -35,7 +35,7 @@ class test_project1(unittest.TestCase):
                            from_id = 1, message_name = "TestTrouble-2")
             self.assertEqual(output.getvalue(
             ),
-                "@100 #1: SENT CANCELLATION TO #2: TestTrouble-1\n@200 #2: RECEIVED CANCELLATION FROM #1: TestTrouble-2\n")
+                "@100 #1: SENT CANCELLATION TO #2: TestTrouble-1\n@200 #2: RECEIVED CANCELLATION TO #1: TestTrouble-2\n")
 
     def test_2_devices_receive_messages_at_the_same_time(self):
         # If two devices receive messages at the same time
@@ -85,6 +85,17 @@ class test_project1(unittest.TestCase):
                          [(0, 211, 2, 'Boo', -1), (0, 211, 2, 'Hello', -1),
                           (0, 985, 2, 'Boo', -1), (0, 985, 2, 'Hello', -1), ]
                          )
+
+    def test_simulation(self):
+        input_file_path = Path("sample_input.txt")
+        with contextlib.redirect_stdout(io.StringIO()) as output:
+            device, next_device, cost_of_time, all_message_name, message_list = process_file(
+                input_file_path)
+            simulation(device, next_device, cost_of_time,
+                       all_message_name, message_list)
+            self.assertEqual(output.getvalue(),
+                             "FILE NOT FOUND\n@0 #1: SENT ALERT TO #2: Trouble\n@750 #2: RECEIVED ALERT TO #1: Trouble\n@750 #2: SENT ALERT TO #3: Trouble\n@2000 #3: RECEIVED ALERT TO #2: Trouble\n@2000 #3: SENT ALERT TO #4: Trouble\n@2200 #1: SENT CANCELLATION TO #2: Trouble\n@2500 #4: RECEIVED ALERT TO #3: Trouble\n@2500 #4: SENT ALERT TO #1: Trouble\n@2950 #2: RECEIVED CANCELLATION TO #1: Trouble\n@2950 #2: SENT CANCELLATION TO #3: Trouble\n@3500 #1: RECEIVED ALERT TO #4: Trouble\n@4200 #3: RECEIVED CANCELLATION TO #2: Trouble\n@4200 #3: SENT CANCELLATION TO #4: Trouble\n@4700 #4: RECEIVED CANCELLATION TO #3: Trouble\n@4700 #4: SENT CANCELLATION TO #1: Trouble\n@5700 #1: RECEIVED CANCELLATION TO #4: Trouble\n"
+                             )
 
 if __name__ == '__main__':
     unittest.main()
