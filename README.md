@@ -1,7 +1,3 @@
-# Simulation-Distributed-System
-模拟Distributed System(分布式系统)的计算机通信过程
-
-
 What is this project about?
 
   模拟一个分布式系统，该系统由多台设备组成，彼此之间能够互通消息
