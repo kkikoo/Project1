@@ -3,6 +3,7 @@
 
 
 What is this project about?
+
   模拟一个分布式系统，该系统由多台设备组成，彼此之间能够互通消息
   
   每一个设备(Device)都有一个非负整数作为ID
